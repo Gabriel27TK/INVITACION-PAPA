@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homenaje Papá - Promoción Alenno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Cinzel:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-blue: #00f3ff;
+            --deep-blue: #05162e;
+            --bright-blue: #0088ff;
+            --gold: #d4af37;
+            --dark-bg: #020612;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark-bg);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            perspective: 1500px;
+            background-image: radial-gradient(circle at center, var(--deep-blue) 0%, var(--dark-bg) 100%);
+        }
+
+        .wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- SOBRE CON ESTILO CYBER-BLUE --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+            transition: transform 0.6s ease;
+            z-index: 10;
+        }
+
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #040d1a;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* --- BALÓN DE FÚTBOL NEÓN EN EL SOBRE --- */
+        .ball-art {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ball-path {
+            stroke: var(--accent-blue);
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawBall 5s ease-in-out infinite alternate, blueGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes drawBall { to { stroke-dashoffset: 0; } }
+        @keyframes blueGlow {
+            from { filter: drop-shadow(0 0 2px var(--bright-blue)); opacity: 0.6; }
+            to { filter: drop-shadow(0 0 15px var(--accent-blue)); opacity: 1; }
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid #061427;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+            z-index: 5;
+        }
+
+        .seal {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle, #00f3ff, #0033aa);
+            border-radius: 50%;
+            z-index: 6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+            transition: all 0.4s ease;
+            border: 2px solid var(--gold);
+        }
+
+        .seal span {
+            color: white;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-shadow: 0 0 5px black;
+        }
+
+        /* --- CARTA DE GALA --- */
+        .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 290px;
+            height: 190px;
+            background: linear-gradient(135deg, #020914 0%, #000205 100%);
+            border: 2px solid var(--bright-blue);
+            border-radius: 15px;
+            z-index: 1;
+            transition: all 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            opacity: 0;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.2);
+            overflow: hidden;
+        }
+
+        /* Fondo sutil de balón geométrico en la carta */
+        .card::before {
+            content: '⚽';
+            position: absolute;
+            font-size: 20rem;
+            color: rgba(0, 243, 255, 0.03);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Transiciones de apertura */
+        .envelope-wrapper.is-open .flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.is-open .seal { opacity: 0; transform: translateX(-50%) scale(0); }
+        .envelope-wrapper.is-open .ball-art { opacity: 0; }
+        
+        .envelope-wrapper.is-open .card {
+            transform: translate(-50%, -50%) scale(1.05);
+            height: 640px;
+            width: 370px;
+            opacity: 1;
+            z-index: 25;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 60px rgba(0, 243, 255, 0.6), 0 0 100px rgba(0, 243, 255, 0.2);
+        }
+
+        .card-content {
+            opacity: 0;
+            transition: opacity 0.6s ease 0.8s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .envelope-wrapper.is-open .card-content { opacity: 1; }
+
+        .logos-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.4));
+        }
+
+        .card h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.2rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--accent-blue), 0 0 20px var(--bright-blue);
+            margin-bottom: 5px;
+        }
+
+        .invitation-text {
+            color: #d1e8ff;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .divider {
+            height: 2px;
+            width: 60%;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            margin: 10px auto;
+        }
+
+        .footer-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: -80px;
+            width: 100%;
+            text-align: center;
+            color: var(--accent-blue);
+            font-family: 'Orbitron';
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            animation: pulseHint 2s infinite;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); text-shadow: 0 0 10px var(--accent-blue); }
+        }
+
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        /* Destellos cyber-blue adicionales */
+        .sparkle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--accent-blue);
+            animation: floatSparkle 4s linear infinite;
+        }
+
+        @keyframes floatSparkle {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+
+    <div class="wrapper">
+        <div class="envelope-wrapper" id="envelope" onclick="toggleEnvelope()">
+            
+            <!-- Balón de Fútbol Vectorial Brillante Animado -->
+            <svg class="ball-art" viewBox="0 0 100 100">
+                <!-- Circunferencia exterior -->
+                <circle class="ball-path" cx="50" cy="50" r="40" />
+                <!-- Pentágono Central -->
+                <polygon class="ball-path" points="50,38 59,45 56,56 44,56 41,45" />
+                <!-- Líneas de estructura exterior (Hexágonos traslapados) -->
+                <line class="ball-path" x1="50" y1="38" x2="50" y2="24" />
+                <line class="ball-path" x1="59" y1="45" x2="71" y2="41" />
+                <line class="ball-path" x1="56" y1="56" x2="64" y2="68" />
+                <line class="ball-path" x1="44" y1="56" x2="36" y2="68" />
+                <line class="ball-path" x1="41" y1="45" x2="29" y2="41" />
+                
+                <!-- Panel Arriba Izquierda -->
+                <line class="ball-path" x1="50" y1="24" x2="38" y2="18" />
+                <line class="ball-path" x1="38" y1="18" x2="29" y2="28" />
+                <line class="ball-path" x1="29" y1="28" x2="29" y2="41" />
+                
+                <!-- Panel Arriba Derecha -->
+                <line class="ball-path" x1="50" y1="24" x2="62" y2="18" />
+                <line class="ball-path" x1="62" y1="18" x2="71" y2="28" />
+                <line class="ball-path" x1="71" y1="28" x2="71" y2="41" />
+                
+                <!-- Panel Abajo Derecha -->
+                <line class="ball-path" x1="71" y1="41" x2="80" y2="53" />
+                <line class="ball-path" x1="80" y1="53" x2="73" y2="68" />
+                <line class="ball-path" x1="73" y1="68" x2="64" y2="68" />
+                <line class="ball-path" x1="64" y1="68" x2="57" y2="84" />
+                <line class="ball-path" x1="57" y1="84" x2="43" y2="84" />
+                
+                <!-- Panel Abajo Izquierda -->
+                <line class="ball-path" x1="43" y1="84" x2="36" y2="68" />
+                <line class="ball-path" x1="36" y1="68" x2="27" y2="68" />
+                <line class="ball-path" x1="27" y1="68" x2="20" y2="53" />
+                <line class="ball-path" x1="20" y1="53" x2="29" y2="41" />
+            </svg>
+
+            <div class="flap"></div>
+            <div class="seal"><span>PAPÁ</span></div>
+            <div class="envelope-back"></div>
+            
+            <div class="card" id="card">
+                <div class="card-content">
+                    <div class="logos-row">
+                        <img src="image_cec3ef.png" alt="Logo Colegio" class="logo-box" onerror="this.src='https://placehold.co/100x100/031024/00f3ff?text=7220'">
+                        <img src="image_cec3b1.png" alt="Logo Promo" class="logo-box" onerror="this.src='https://placehold.co/100x100/031024/00f3ff?text=ALENNO'">
+                    </div>
+
+                    <div class="label" style="color: white; opacity: 0.7;">Homenaje Especial</div>
+                    <h2>Feliz día Papá</h2>
+                    
+                    <div class="divider"></div>
+
+                    <p class="invitation-text">
+                        "Es sumamente grato para nosotros dirigirnos a usted a través de esta carta de invitación a una conmemoración muy especial por el Día del Padre. Nos honraría contar con su distinguida presencia en el homenaje de gala que hemos preparado con toda nuestra admiración. ¡Lo esperamos de corazón!"
+                    </p>
+
+                    <div style="margin-top: 10px;">
+                        <p class="label">Lugar de Honor</p>
+                        <p class="value">SALÓN 5TO A — I.E. 7220</p>
+                    </div>
+
+                    <div>
+                        <p class="label">Momento Mágico</p>
+                        <p class="value" style="color: var(--accent-blue);">19 DE JUNIO // 4:30 a 4:55 PM</p>
+                    </div>
+
+                    <div class="divider" style="width: 40%; opacity: 0.5;"></div>
+
+                    <div class="footer-text">CON TODO NUESTRO RESPETO Y AMOR: PROMO ALENNO</div>
+                </div>
+            </div>
+
+            <div class="hint" id="hint">TOCA PARA ABRIR EL CORAZÓN</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleEnvelope() {
+            const env = document.getElementById('envelope');
+            const hint = document.getElementById('hint');
+            env.classList.toggle('is-open');
+            
+            if(env.classList.contains('is-open')) {
+                hint.style.opacity = '0';
+                createSparkles();
+            } else {
+                hint.style.opacity = '1';
+            }
+        }
+
+        function createSparkles() {
+            const card = document.getElementById('card');
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    const s = document.createElement('div');
+                    s.className = 'sparkle';
+                    s.style.left = Math.random() * 100 + '%';
+                    s.style.top = Math.random() * 100 + '%';
+                    s.style.width = Math.random() * 4 + 2 + 'px';
+                    s.style.height = s.style.width;
+                    s.style.backgroundColor = 'var(--accent-blue)';
+                    s.style.animationDelay = Math.random() * 2 + 's';
+                    card.appendChild(s);
+                    setTimeout(() => s.remove(), 4000);
+                }, i * 100);
+            }
+        }
+
+        // Sistema de partículas de fondo (Color Cyan, Blue, Gold)
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<70; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.5 + 0.5,
+                    v: Math.random() * 0.4 + 0.1,
+                    o: Math.random(),
+                    c: Math.random() > 0.5 ? '#00f3ff' : '#d4af37'
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.fillStyle = p.c;
+                ctx.globalAlpha = p.o;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.v;
+                if(p.y < -10) p.y = canvas.height + 10;
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+    </script>
+</body>
+</html>
